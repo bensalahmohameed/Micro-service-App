@@ -1,0 +1,121 @@
+package com.example.demo;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+import com.example.demo.dao.MembreRepository;
+import com.example.demo.entities.EnseignantChercheur;
+import com.example.demo.entities.Etudiant;
+import com.example.demo.entities.Membre;
+import com.example.demo.service.IMemberService;
+
+import lombok.AllArgsConstructor;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@AllArgsConstructor
+public class MembreServiceApplication  implements CommandLineRunner {
+	
+	MembreRepository membreRepository ;
+	IMemberService memberService;
+	
+	
+	public static void main(String[] args)  {
+		SpringApplication.run(MembreServiceApplication.class, args);
+		
+		
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		// TODO Auto-generated method stub
+		Etudiant etd1=Etudiant.builder()
+				.cin("123456")
+				.dateInscription(new Date())
+				.dateNaissance(new Date())
+				.diplome("mastère")
+				.email("etd1@gmail.com")
+				.password("pass1")
+				.encadrant(null)
+				.cv("cv1")
+				.nom("abid")
+				.prenom("youssef)")
+				.sujet("blockhain")
+				.build();
+		Etudiant etd2=Etudiant.builder()
+				.cin("11135051")
+				.dateInscription(new Date())
+				.dateNaissance(new Date())
+				.diplome("GI3")
+				.email("yesmine@gmail.com")
+				.password("pass2")
+				.encadrant(null)
+				.cv("cv")
+				.nom("frikha")
+				.prenom("yesmine")
+				.sujet("Devops")
+				.build();
+		membreRepository.save(etd1);
+		membreRepository.save(etd2);
+		EnseignantChercheur ens1 =EnseignantChercheur.builder()
+				.cin("1123456")
+				.nom("ens1")
+				.prenom("informatique")
+				.dateNaissence(new Date())
+				.cv("cv1")
+				.email("ens1@gmail.com")
+				.password("passens")
+				.etablissement("enis")
+				.grade("chercheur")
+				.build();
+		EnseignantChercheur ens2 =EnseignantChercheur.builder()
+				.cin("11234567")
+				.nom("ens2")
+				.prenom("informatique")
+				.dateNaissence(new Date())
+				.cv("cv2")
+				.email("ens2@gmail.com")
+				.password("passens2")
+				.etablissement("enis")
+				.grade("chercheur2")
+				.build();
+		membreRepository.save(ens1);
+		membreRepository.save(ens2);
+		
+		// afficher tout les membre 
+		List<Membre> membres = membreRepository.findAll();
+		for (Membre membre : membres) {
+			System.out.println(membre.getNom()+" " + membre.getPrenom());
+		}
+		
+		// chercher un membre by Id
+		Membre m1 = membreRepository.findById(1L).get();
+		System.out.println(m1.getNom()) ;
+		
+		// modifir un Membre 
+		
+		
+		m1.setEmail("emna@gmail.com");
+		membreRepository.save(m1);
+		// supprimer 
+		membreRepository.delete(m1);
+		
+		Membre m= memberService.findMember(3L);
+		m.setCv("cv1.pdf");
+		memberService.updateMember(m);
+		// Delete a Member
+		memberService.deleteMember(4L);
+		memberService.affecterEtudiantToEnseignant(2l,3l);
+		List <Etudiant> etudiant_ens =memberService.afficherEtudiant_Enseignant(ens1);
+		for (Etudiant etd :etudiant_ens) {
+			System.out.println(etd.getNom()+" " +etd.getPrenom());
+		}
+		
+	}
+
+}

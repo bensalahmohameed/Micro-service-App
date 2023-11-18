@@ -1,0 +1,115 @@
+package com.example.demo.service;
+
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.dao.EnseignantChercheurRepository;
+import com.example.demo.dao.EtudiantRepository;
+import com.example.demo.dao.MembreRepository;
+import com.example.demo.entities.EnseignantChercheur;
+import com.example.demo.entities.Etudiant;
+import com.example.demo.entities.Membre;
+import com.example.demo.entities.Membre_Pub_Id;
+import com.example.demo.entities.Membre_Publication;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class MembreServiceImpl implements IMemberService {
+	
+	MembreRepository memberRepository ;
+	EtudiantRepository etudiantRepository;
+	EnseignantChercheurRepository enseignantchercheurRepository ;
+	MembreRepository membreRepository;
+	MembrePubRepository membrepubrepository;
+	@Override
+	public Membre addMember(Membre m) {
+		memberRepository.save(m) ;
+		return m;
+	}
+
+	@Override
+	public void deleteMember(Long id) {
+		memberRepository.deleteById(id);
+	}
+
+	@Override
+	public Membre updateMember(Membre p) {
+		
+		return memberRepository.saveAndFlush(p);
+	}
+
+	@Override
+	public Membre findMember(Long id) {
+		Membre m = (Membre) memberRepository.findById(id).get() ;
+		return m;
+	}
+
+	@Override
+	public List<Membre> findAll() {
+				return memberRepository.findAll();
+	}
+
+	@Override
+	public Membre findByCin(String cin) {
+		
+		return memberRepository.findByCin(cin);
+	}
+
+	@Override
+	public Membre findByEmail(String email) {
+		
+		return memberRepository.findByEmail(email);
+	}
+
+	@Override
+	public List<Membre> findByNom(String nom) {
+		
+		return memberRepository.findByNomStartingWith(nom);
+	}
+
+	@Override
+	public List<Etudiant> findByDiplome(String diplome) {
+		
+		return etudiantRepository.findByDiplome(diplome);
+	}
+
+	@Override
+	public List<EnseignantChercheur> findByGrade(String grade) {
+		
+		return enseignantchercheurRepository.findByGrade(grade);
+	}
+
+	@Override
+	public List<EnseignantChercheur> findByEtablissement(String etablissement) {
+		
+		return enseignantchercheurRepository.findByEtablissement(etablissement);
+	}
+
+	@Override
+	public void affecterEtudiantToEnseignant(Long idEtd, Long idEns) {
+		Etudiant etd = etudiantRepository.findById(idEtd).get();
+		EnseignantChercheur ens = enseignantchercheurRepository.findById(idEns).get();
+		etd.setEncadrent(ens);
+		etudiantRepository.save(etd);
+		
+	}
+
+	public List<Etudiant> afficherEtudiant_Enseignant(EnseignantChercheur ens) {
+		
+		return etudiantRepository.findByEncadrent(ens);
+	}
+	
+	public void affecterauteurTopublication(Long idauteur, Long idpub)
+	{
+	Membre mbr= membreRepository.findById(idauteur).get();
+	Membre_Publication mbs= new Membre_Publication();
+	mbs.setAuteur(mbr);
+	mbs.setId(new Membre_Pub_Id(idpub, idauteur));
+	membrepubrepository.save(mbs);
+	}
+
+}

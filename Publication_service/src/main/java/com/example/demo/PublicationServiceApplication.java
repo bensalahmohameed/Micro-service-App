@@ -29,16 +29,16 @@ public class PublicationServiceApplication implements CommandLineRunner {
 		Publication pub1 = Publication.builder()
 							.type("Media")
 							.titre("pub1")
-							.lien("jidhfzh")
+							.lien("publication1.com")
 							.Date(new Date())
-							.Sourcepdf("djbhcujz")
+							.Sourcepdf("publication1PDF")
 							.build();
 		Publication pub2 = Publication.builder()
 				.type("Social")
 				.titre("pub2")
-				.lien("fkrhfhr")
+				.lien("publication2.com")
 				.Date(new Date())
-				.Sourcepdf("jbzeef")
+				.Sourcepdf("publication2PDF")
 				.build();
 		publicationRespository.save(pub1);
 		publicationRespository.save(pub2);

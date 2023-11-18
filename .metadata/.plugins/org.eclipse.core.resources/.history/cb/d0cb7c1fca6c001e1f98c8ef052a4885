@@ -1,0 +1,11 @@
+package com.example.demo.proxies;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@FeignClient(name="publication-service")
+public interface PublicationProxyService {
+
+	@GetMapping("/publications/{id}")
+	public PublicationBean.find
+}
